@@ -1,0 +1,71 @@
+# git-cliff configuration for BCCA (Bank Customer Churn Analysis)
+
+[changelog]
+# Template for the changelog header
+header = """
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+"""
+# Template for the version header
+version = """
+## [{{ version }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+
+"""
+# Template for commit message grouping
+commit = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | upper_first }}
+{% for commit in commits %}
+- {{ commit.message | upper_first }}{% end %}
+{% endfor %}
+
+"""
+# Template for the whole changelog body
+body = """
+{% if version %}\
+{{ version_header }}\
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | upper_first }}
+{% for commit in commits %}
+- {{ commit.message | upper_first }}{% if commit.breaking %} [breaking]{% endif %}{% if commit.scope %} ({{ commit.scope }}){% endif %}
+{% endfor %}
+{% endfor %}\
+"""
+
+[git]
+# Parse conventional commits
+conventional_commits = true
+# Filter commits by specified types
+filter_unconventional = true
+# Generate commit URLs
+remote = "gitlab"
+# Repository URL
+repository = "https://code.swecha.org/SishirMadhavan23/BCCA"
+# Tag pattern for versions
+tag_pattern = "v[0-9]*"
+# Skip merge commits
+skip_merges = true
+
+# Commit pre-processing
+[git.commit_preprocessors]
+# Replace issue numbers with links
+replace_regex = [
+  {pattern = "(#[0-9]+)", replace = "[`$1`](https://code.swecha.org/SishirMadhavan23/BCCA/-/issues/$1)"},
+]
+
+# Commit parsers based on conventional commits
+[git.conventional_commits.parsers]
+feat = { group = "Features", description = "New features" }
+fix = { group = "Bug Fixes", description = "Bug fixes" }
+docs = { group = "Documentation", description = "Documentation changes" }
+style = { group = "Styling", description = "Code style changes" }
+refactor = { group = "Refactoring", description = "Code refactoring" }
+perf = { group = "Performance", description = "Performance improvements" }
+test = { group = "Testing", description = "Test additions/updates" }
+build = { group = "Build System", description = "Build system changes" }
+ci = { group = "CI/CD", description = "CI/CD configuration changes" }
+chore = { group = "Chores", description = "Other changes" }
+revert = { group = "Reverts", description = "Reverted commits" }

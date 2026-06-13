@@ -31,6 +31,7 @@ Thumbs.db
 
 # Testing
 .coverage
+coverage.xml
 htmlcov/
 .pytest_cache/
 
@@ -40,3 +41,23 @@ logs/
 
 # Docker
 .docker/
+
+# Pre-commit
+.pre-commit-config.yaml.bak
+
+# Semgrep
+.semgrep_logs/
+
+# Gitleaks
+gitleaks-report.json
+
+# Secrets baseline
+.secrets.baseline
+
+# git-cliff
+cliff.toml.bak
+
+# Specs
+.specify/
+specs/
+!specs/BCCA-FEAT-001-prediction-api.md

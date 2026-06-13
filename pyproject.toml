@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "AI-powered Bank Customer Churn Analysis platform with multi-language support (English, Hindi, Telugu), Random Forest ML predictions, and interactive dashboards."
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = {text = "AGPL-3.0-only"}
 keywords = ["banking", "churn-analysis", "machine-learning", "flask", "data-science", "customer-retention"]
 authors = [
     {name = "BCCA Team", email = "bcca@example.com"}
@@ -17,7 +17,7 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Financial and Insurance Industry",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Natural Language :: English",
@@ -82,6 +82,8 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "if TYPE_CHECKING:",
 ]
+fail_under = 80
+show_missing = true
 
 [tool.setuptools.packages.find]
 where = ["app"]
