@@ -67,3 +67,6 @@ specs/
 !.specify/**
 !specs/
 !specs/**
+
+# Ignore local package vendor files
+temp_pip/
