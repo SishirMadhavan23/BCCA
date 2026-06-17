@@ -18,5 +18,27 @@ mypy>=1.7.1
 pylint>=3.0.3
 flake8>=7.0.0
 
+<<<<<<< HEAD
 # Pre-commit (development only)
 pre-commit>=3.6.0
+=======
+# Security
+bandit==1.7.5
+semgrep==1.65.0
+trufflehog==2.2.1
+
+# Secret Scanning
+gitleaks==8.18.2
+
+# Dependency Audit
+pip-audit==2.7.0
+
+# Dead Code Detection
+vulture==2.11
+
+# Automation
+git-cliff==2.2.0
+
+# Pre-commit
+pre-commit==3.6.0
+>>>>>>> 1b36e0cc8c73660830febcf3714e856e229bca16
