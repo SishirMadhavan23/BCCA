@@ -91,12 +91,8 @@ where = ["app"]
 # ============================================
 # Pylint Configuration
 # ============================================
-[tool.pylint]
-master.py-version = "3.10"
-master.jobs = 4
-master.persistent = false
-master.unsafe-load-any-extension = false
-MESSAGES CONTROL.disable = [
+[tool.pylint.messages-control]
+disable = [
     "C0114",  # missing-module-docstring
     "C0115",  # missing-class-docstring
     "C0116",  # missing-function-docstring
@@ -104,8 +100,18 @@ MESSAGES CONTROL.disable = [
     "R0913",  # too-many-arguments
     "W0511",  # fixme
 ]
-REPORTS.output-format = "colorized"
-BASIC.good-names = [
+
+[tool.pylint.master]
+py-version = "3.10"
+jobs = 4
+persistent = false
+unsafe-load-any-extension = false
+
+[tool.pylint.reports]
+output-format = "colorized"
+
+[tool.pylint.basic]
+good-names = [
     "i", "j", "k", "x", "y", "z", "X", "y", "_", "df", "id", "ex", "db",
 ]
 DESIGN.max-args = 10
