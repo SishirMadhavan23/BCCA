@@ -33,6 +33,7 @@ _scaler = None
 _label_geo = None
 _label_gender = None
 _dash_data = None
+_customer_df = None
 
 
 def load_model():
@@ -230,6 +231,100 @@ def get_translations():
     if lang in TRANSLATIONS:
         return jsonify({'success': True, 'data': TRANSLATIONS[lang]})
     return jsonify({'success': True, 'data': TRANSLATIONS['en']})
+
+
+def get_customer_dataframe():
+    """Generate or retrieve the cached customer dataframe with names."""
+    global _customer_df
+    if _customer_df is not None:
+        return _customer_df
+    _customer_df = generate_sample_data(500)
+    return _customer_df
+
+
+@app.route('/api/customers')
+def customers_list():
+    """API endpoint to list all customers."""
+    df = get_customer_dataframe()
+    geo = request.args.get('geo', '')
+    status = request.args.get('status', '')
+    
+    result_df = df.copy()
+    if geo and geo in ['France', 'Spain', 'Germany']:
+        result_df = result_df[result_df['Geography'] == geo]
+    if status == 'churned':
+        result_df = result_df[result_df['Exited'] == 1]
+    elif status == 'retained':
+        result_df = result_df[result_df['Exited'] == 0]
+    
+    customers = []
+    for _, row in result_df.iterrows():
+        customers.append({
+            'name': row['CustomerName'],
+            'credit_score': int(row['CreditScore']),
+            'geography': row['Geography'],
+            'gender': row['Gender'],
+            'age': int(row['Age']),
+            'tenure': int(row['Tenure']),
+            'balance': float(row['Balance']),
+            'num_products': int(row['NumOfProducts']),
+            'has_cr_card': int(row['HasCrCard']),
+            'is_active_member': int(row['IsActiveMember']),
+            'estimated_salary': float(row['EstimatedSalary']),
+            'exited': int(row['Exited']),
+        })
+    
+    return jsonify({
+        'success': True,
+        'total': len(result_df),
+        'customers': customers
+    })
+
+
+@app.route('/api/customers/search')
+def customers_search():
+    """API endpoint to search customers by name."""
+    df = get_customer_dataframe()
+    query = request.args.get('q', '').strip().lower()
+    geo = request.args.get('geo', '')
+    status = request.args.get('status', '')
+    
+    if not query and not geo and not status:
+        return jsonify({'success': True, 'total': 0, 'customers': []})
+    
+    matching = df.copy()
+    if query:
+        matching = matching[matching['CustomerName'].str.lower().str.contains(query, na=False)]
+    if geo and geo in ['France', 'Spain', 'Germany']:
+        matching = matching[matching['Geography'] == geo]
+    if status == 'churned':
+        matching = matching[matching['Exited'] == 1]
+    elif status == 'retained':
+        matching = matching[matching['Exited'] == 0]
+    
+    customers = []
+    for _, row in matching.iterrows():
+        customers.append({
+            'name': row['CustomerName'],
+            'credit_score': int(row['CreditScore']),
+            'geography': row['Geography'],
+            'gender': row['Gender'],
+            'age': int(row['Age']),
+            'tenure': int(row['Tenure']),
+            'balance': float(row['Balance']),
+            'num_products': int(row['NumOfProducts']),
+            'has_cr_card': int(row['HasCrCard']),
+            'is_active_member': int(row['IsActiveMember']),
+            'estimated_salary': float(row['EstimatedSalary']),
+            'exited': int(row['Exited']),
+        })
+    
+    return jsonify({
+        'success': True,
+        'total': len(matching),
+        'query': query,
+        'customers': customers
+    })
 
 
 @app.route('/api/ai/health')

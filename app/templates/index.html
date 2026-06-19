@@ -20,6 +20,7 @@
                 <li><a href="#home" class="active" data-i18n="nav_home" data-section="home">Home</a></li>
                 <li><a href="#predict" data-i18n="nav_predict" data-section="predict">Predict</a></li>
                 <li><a href="#dashboard" data-i18n="nav_dashboard" data-section="dashboard">Dashboard</a></li>
+                <li><a href="#customers" data-section="customers">Customers</a></li>
                 <li><a href="#about" data-i18n="nav_about" data-section="about">About</a></li>
                 <li class="lang-selector">
                     <select id="langSelect" onchange="switchLanguage(this.value)">
@@ -288,6 +289,64 @@
                             <div class="chart-container">
                                 <canvas id="featureImportanceChart"></canvas>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section id="customers" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Customer Directory</h2>
+                    <p>Search for a customer by name to view their full profile and churn status</p>
+                </div>
+                <div class="customers-container">
+                    <div class="customers-search-card">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="customerSearchInput" placeholder="Enter customer name..." oninput="searchCustomers()" autocomplete="off">
+                            <button class="btn btn-primary" onclick="searchCustomers()">Search</button>
+                        </div>
+                        <div class="search-filters">
+                            <select id="customerGeoFilter" onchange="searchCustomers()">
+                                <option value="">All Geographies</option>
+                                <option value="France">France</option>
+                                <option value="Spain">Spain</option>
+                                <option value="Germany">Germany</option>
+                            </select>
+                            <select id="customerStatusFilter" onchange="searchCustomers()">
+                                <option value="">All Status</option>
+                                <option value="retained">Retained</option>
+                                <option value="churned">Churned</option>
+                            </select>
+                            <span class="search-count" id="customerCount">0 customers</span>
+                        </div>
+                    </div>
+                    <div class="customers-loading" id="customersLoading" style="display:none;">
+                        <div class="spinner"></div>
+                        <span>Loading customers...</span>
+                    </div>
+                    <div class="customers-table-container" id="customersTableContainer" style="display:none;">
+                        <div class="table-wrapper">
+                            <table class="customers-table" id="customersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Geography</th>
+                                        <th>Credit Score</th>
+                                        <th>Balance</th>
+                                        <th>Products</th>
+                                        <th>Active</th>
+                                        <th>Tenure</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTableBody">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

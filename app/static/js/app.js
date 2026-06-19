@@ -21,20 +21,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Smooth scroll for nav links
-    document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+    // Smooth scroll for all hash links (nav links, hero buttons, footer links)
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
             const target = document.getElementById(targetId);
             if (target) {
+                e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            // Close mobile nav
-            navLinks.classList.remove('active');
-            // Update active link
+            // Close mobile nav if open
+            if (navLinks) {
+                navLinks.classList.remove('active');
+            }
+            // Update active nav link
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            this.classList.add('active');
+            if (this.closest('.nav-links')) {
+                this.classList.add('active');
+            }
         });
     });
     
@@ -375,6 +379,82 @@ function renderAgeDistChart(data) {
         }
     });
 }
+
+// ===== Customer Search =====
+let searchDebounceTimer = null;
+
+async function searchCustomers() {
+    const query = document.getElementById('customerSearchInput').value.trim();
+    const geo = document.getElementById('customerGeoFilter').value;
+    const status = document.getElementById('customerStatusFilter').value;
+    const loadingEl = document.getElementById('customersLoading');
+    const tableContainer = document.getElementById('customersTableContainer');
+    const tableBody = document.getElementById('customersTableBody');
+    const countEl = document.getElementById('customerCount');
+
+    // If no query, show all customers filtered by geo/status
+    const endpoint = query
+        ? `/api/customers/search?q=${encodeURIComponent(query)}&geo=${geo}&status=${status}`
+        : `/api/customers?geo=${geo}&status=${status}`;
+
+    loadingEl.style.display = 'block';
+    tableContainer.style.display = 'none';
+
+    try {
+        const response = await fetch(endpoint);
+        const result = await response.json();
+
+        loadingEl.style.display = 'none';
+
+        if (result.success && result.customers && result.customers.length > 0) {
+            tableBody.innerHTML = '';
+            result.customers.forEach(c => {
+                const statusClass = c.exited === 1 ? 'status-churned' : 'status-retained';
+                const statusText = c.exited === 1 ? '🔴 Churned' : '🟢 Retained';
+                const activeText = c.is_active_member === 1 ? '✅ Yes' : '❌ No';
+                const balanceFormatted = '$' + c.balance.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.age}</td>
+                    <td>${c.geography}</td>
+                    <td>${c.credit_score}</td>
+                    <td>${balanceFormatted}</td>
+                    <td>${c.num_products}</td>
+                    <td>${activeText}</td>
+                    <td>${c.tenure} yrs</td>
+                    <td><span class="${statusClass}">${statusText}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+            countEl.textContent = `${result.total} customer${result.total !== 1 ? 's' : ''} found`;
+            tableContainer.style.display = 'block';
+        } else {
+            tableBody.innerHTML = `<tr><td colspan="9" class="no-results">No customers found matching "${query || 'all filters'}"</td></tr>`;
+            countEl.textContent = '0 customers';
+            tableContainer.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        loadingEl.style.display = 'none';
+        tableBody.innerHTML = '<tr><td colspan="9" class="no-results">Failed to load customers. Is the server running?</td></tr>';
+        tableContainer.style.display = 'block';
+    }
+}
+
+// Search on Enter key
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('customerSearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchCustomers();
+            }
+        });
+    }
+});
 
 async function renderFeatureImportanceChart() {
     const ctx = document.getElementById('featureImportanceChart').getContext('2d');

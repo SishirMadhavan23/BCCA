@@ -10,11 +10,43 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 
+def generate_customer_names(n_samples=5000, seed=99):
+    """Generate synthetic customer names."""
+    np.random.seed(seed)
+    first_names = [
+        'James', 'Emma', 'Oliver', 'Sophia', 'William', 'Isabella', 'Lucas', 'Mia',
+        'Henry', 'Charlotte', 'Alexander', 'Amelia', 'Daniel', 'Harper', 'Matthew', 'Evelyn',
+        'Sebastian', 'Abigail', 'Jack', 'Emily', 'Owen', 'Ella', 'Samuel', 'Scarlett',
+        'Ryan', 'Grace', 'Nathan', 'Chloe', 'Carter', 'Victoria', 'Luke', 'Riley',
+        'Dylan', 'Aria', 'Andrew', 'Lily', 'Isaac', 'Aurora', 'Thomas', 'Zoey',
+        'Ethan', 'Nora', 'Noah', 'Camila', 'Liam', 'Penelope', 'Mason', 'Layla',
+        'Arjun', 'Priya', 'Raj', 'Ananya', 'Vikram', 'Neha', 'Ravi', 'Deepika',
+        'Suresh', 'Kavita', 'Amit', 'Pooja', 'Rahul', 'Anjali', 'Sanjay', 'Meera',
+        'Carlos', 'Maria', 'Jose', 'Ana', 'Luis', 'Carmen', 'Jorge', 'Rosa',
+        'Pedro', 'Elena', 'Miguel', 'Beatriz', 'Rafael', 'Lucia', 'Fernando', 'Sofia'
+    ]
+    last_names = [
+        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
+        'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
+        'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White',
+        'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young',
+        'Sharma', 'Verma', 'Patel', 'Singh', 'Kumar', 'Gupta', 'Reddy', 'Nair',
+        'Fernandez', 'Luis', 'Garcia', 'Moreno', 'Alvarez', 'Romero', 'Ruiz', 'Torres'
+    ]
+    names = []
+    for _ in range(n_samples):
+        first = np.random.choice(first_names)
+        last = np.random.choice(last_names)
+        names.append(f"{first} {last}")
+    return names
+
+
 def generate_sample_data(n_samples=5000):
     """Generate a realistic synthetic bank customer churn dataset."""
     np.random.seed(42)
     
     data = {
+        'CustomerName': generate_customer_names(n_samples),
         'CreditScore': np.random.randint(350, 850, n_samples),
         'Geography': np.random.choice(['France', 'Spain', 'Germany'], n_samples, p=[0.5, 0.25, 0.25]),
         'Gender': np.random.choice(['Male', 'Female'], n_samples),
