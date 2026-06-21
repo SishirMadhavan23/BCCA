@@ -856,9 +856,8 @@ def show_customers():
             'CustomerName': 'Name',
             'CreditScore': 'Credit Score',
             'NumOfProducts': 'Products',
-            'IsActiveMember': 'Active',
         })
-        display_df = display_df.drop(columns=['Exited'])
+        display_df = display_df.drop(columns=['Exited', 'IsActiveMember'])
 
         st.dataframe(display_df, use_container_width=True, height=min(600, 40 * len(display_df) + 40))
     else:
