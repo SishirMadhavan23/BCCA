@@ -275,13 +275,11 @@ STREAMLIT_SERVER_HEADLESS=true
 
 ### GitLab CI Stages
 
-1. **Lint**: Code quality checks (Ruff, Pylint, Flake8, Pyupgrade, Vulture)
-2. **Format**: Code formatting verification (Ruff format)
-3. **Type Check**: Static type analysis (Mypy)
-4. **Test**: Unit tests with coverage reporting (pytest)
-5. **Security**: Security scanning (Bandit, Semgrep, Gitleaks, TruffleHog)
-6. **Build**: Docker image build
-7. **Deploy**: Release automation with changelog
+1. **Lint**: Code quality + format + type checks (Ruff, Mypy, Pylint, Flake8, Pyupgrade, Vulture)
+2. **Test**: Unit tests with coverage reporting (pytest)
+3. **Security**: Security scanning (Bandit, Semgrep, Gitleaks, TruffleHog, pip-audit)
+4. **Build**: Docker image build
+5. **Deploy**: Release automation with changelog
 
 ### GitHub Actions
 
