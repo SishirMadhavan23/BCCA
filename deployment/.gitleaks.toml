@@ -1,0 +1,74 @@
+# Gitleaks configuration for BCCA (Bank Customer Churn Analysis)
+
+title = "BCCA Secret Scanning Configuration"
+
+[allowlist]
+description = "Allowlisted files and paths"
+paths = [
+    ".git",
+    "node_modules",
+    "venv",
+    ".venv",
+    "__pycache__",
+    "*.egg-info",
+    ".pytest_cache",
+    "htmlcov",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".vscode",
+    ".idea",
+]
+
+[[rules]]
+id = "bcca-hardcoded-password"
+description = "Hardcoded password"
+regex = '''(?i)(?:password|pwd|passwd|secret|token|api_key|apikey)(?:[\s]*=[\s]*['"][^'"]{3,}['"])'''
+tags = ["bcca", "credentials"]
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(?:api[_-]?key|apikey|api[._-]?secret|api_secret)(?:[\s]*=[\s]*['"][^'"]{8,}['"])'''
+tags = ["bcca", "api", "credentials"]
+
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN\s?(?:RSA|DSA|EC|OPENSSH|PGP)?\s?PRIVATE\s?KEY-----'''
+tags = ["bcca", "crypto", "credentials"]
+
+[[rules]]
+id = "jwt-token"
+description = "JWT Token"
+regex = '''eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}'''
+tags = ["bcca", "jwt", "credentials"]
+
+[[rules]]
+id = "flask-secret-key"
+description = "Flask Secret Key"
+regex = '''SECRET_KEY\s*=\s*['"][a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:',.<>?/`~]{16,}['"]'''
+tags = ["bcca", "flask", "credentials"]
+
+[[rules]]
+id = "github-token"
+description = "GitHub Token"
+regex = '''(?:gh[ps]_[a-zA-Z0-9]{36,}|github_pat_[a-zA-Z0-9]{22,})'''
+tags = ["bcca", "github", "credentials"]
+
+[[rules]]
+id = "generic-aws-key"
+description = "AWS Access Key ID"
+regex = '''(?:AKIA[0-9A-Z]{16}|A3T[A-Z0-9]|A3TX[A-Z0-9]|A3TF[A-Z0-9])'''
+tags = ["bcca", "aws", "credentials"]
+
+[[rules]]
+id = "generic-sqli"
+description = "Potential SQL Injection via string formatting"
+regex = '''(?i)(?:SELECT|INSERT|UPDATE|DELETE).*(?:%s|%r|\+.*request|f['\"].*\{.*request)'''
+tags = ["bcca", "security", "injection"]
+
+[[rules]]
+id = "debug-mode"
+description = "Flask debug mode enabled in production"
+regex = '''(?:debug\s*=\s*True|DEBUG\s*=\s*True|debug=True)'''
+tags = ["bcca", "flask", "security"]

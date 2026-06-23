@@ -1,72 +1,63 @@
-# Virtual Environment
-venv/
-.venv/
-env/
-
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.env
 *.egg-info/
 dist/
 build/
-*.egg
-
-# Model artifacts
-model/*.pkl
-model/*.csv
-
-# Environment
-.env
-*.env.local
+eggs/
+wheels/
+.eggs/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Model artifacts
+model/*.pkl
+model/*.csv
+
 # Testing
-.coverage
-coverage.xml
-htmlcov/
 .pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+.tox/
 
 # Logs
 *.log
 logs/
 
-# Docker
-.docker/
+# Data
+data/*.csv
+!data/.gitkeep
 
-# Pre-commit
-.pre-commit-config.yaml.bak
+# Environment variables
+.env.local
+.env.*.local
 
-# Semgrep
-.semgrep_logs/
+# Streamlit
+.streamlit/secrets.toml
 
-# Gitleaks
-gitleaks-report.json
+# Documentation builds
+docs/_build/
 
-# Secrets baseline
-.secrets.baseline
-
-# git-cliff
-cliff.toml.bak
-
-# Specs
-.specify/
-specs/
-!specs/BCCA-FEAT-001-prediction-api.md
-
-# Allow tracking Spec-Kit templates and all specs
-!.specify/
-!.specify/**
-!specs/
-!specs/**
-
-# Ignore local package vendor files
-temp_pip/
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak

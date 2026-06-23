@@ -1,192 +1,382 @@
 # Bank Customer Churn Analysis (BCCA)
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.0-green)](https://flask.palletsprojects.com/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3-orange)](https://scikit-learn.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+AI-powered Bank Customer Churn Analysis platform with multi-language support (English, Hindi, Telugu), Random Forest ML predictions, and interactive dashboards.
 
-An AI-powered Bank Customer Churn Analysis platform that leverages machine learning to predict customer churn probability. Built with Flask, scikit-learn, and Chart.js, with multi-language support for English, Hindi, and Telugu.
+## Features
 
-## 🌟 Features
+- **Real-time AI Churn Predictions**: Random Forest model with 200 estimators
+- **Multi-language Support**: English, Hindi (हिंदी), Telugu (తెలుగు)
+- **Interactive Dashboard**: Plotly-powered visualizations
+- **Customer Directory**: Search, filter, and detailed views
+- **Dataset Upload**: Analyze your own CSV data
+- **Feature Importance**: Understand key churn drivers
 
-- **🔮 AI-Powered Predictions**: Real-time churn prediction using Random Forest classifier
-- **📊 Interactive Dashboard**: Comprehensive analytics with KPI cards and charts
-- **🌐 Multi-Language Support**: UI available in English, Hindi (हिंदी), and Telugu (తెలుగు)
-- **📈 Feature Importance Analysis**: Understand which factors most influence churn
-- **🎯 High Accuracy**: Trained on 5000+ synthetic customer records
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
+## Screenshots
 
-## 🚀 Quick Start
+### Home Page
+Overview of the platform with key features and quick navigation.
 
-### Prerequisites
+### Dashboard
+- Key metrics: Total customers, churned, retained, churn rate
+- Interactive charts:
+  - Churn distribution (pie chart)
+  - Geographic distribution (bar chart)
+  - Age distribution analysis
+  - Credit card ownership distribution
+  - Feature importance rankings
 
-- Python 3.10+
-- pip (Python package manager)
+### Predict Page
+Manual customer data entry with real-time prediction:
+- Credit score, geography, gender, age, tenure
+- Balance, products, credit card status, activity
+- Estimated salary
+- Returns: churn probability, confidence level, risk factors
 
-### Installation
+### Customers Page
+- Full customer directory with search
+- Filter by geography and churn status
+- Detailed customer profiles
+- Upload custom datasets for batch prediction
 
-1. Clone the repository:
+## Tech Stack
+
+### Backend
+- **Python 3.10+**
+- **scikit-learn**: Random Forest classifier
+- **pandas**: Data processing
+- **numpy**: Numerical operations
+- **joblib**: Model serialization
+
+### Frontend
+- **Streamlit**: Web application framework
+- **Plotly**: Interactive visualizations
+
+### Quality & CI/CD
+- **Ruff**: Fast Python linter and formatter
+- **Mypy**: Static type checking
+- **Pylint**: Code quality analysis
+- **Flake8**: Style guide enforcement
+- **Bandit**: Security linting
+- **Vulture**: Dead code detection
+- **pytest**: Test framework with coverage reporting
+- **pre-commit**: Git hooks automation
+- **GitLab CI**: Continuous integration pipeline
+- **Gitleaks**: Secret scanning
+- **Semgrep**: Static analysis for security
+- **pip-audit**: Dependency vulnerability scanning
+- **git-cliff**: Automated changelog generation
+
+## Requirements
+
+- Python >= 3.10
+- See `requirements.txt` for dependencies
+
+## Installation
+
 ```bash
-git clone https://github.com/yourusername/bank-customer-churn-analysis.git
-cd bank-customer-churn-analysis
-```
+# Clone the repository
+git clone https://code.swecha.org/SishirMadhavan23/BCCA.git
+cd BCCA
 
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+# Create virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-4. Train the model:
+## Usage
+
+### Train the Model
+
 ```bash
 python -m app.model
 ```
 
-5. Run the application:
-```bash
-python -m app.app
-```
+This will:
+1. Load the dataset (`data/Churn_Modelling.csv` or generate synthetic data)
+2. Preprocess and encode features
+3. Train a Random Forest classifier
+4. Save model artifacts to `model/` directory
+5. Display performance metrics (accuracy, precision, recall, F1)
 
-6. Open your browser and navigate to:
-```
-http://localhost:5000
-```
-
-## 🏗️ Project Structure
-
-```
-bcca/
-├── app/
-│   ├── __init__.py          # Package initialization
-│   ├── app.py               # Flask application & API routes
-│   ├── model.py             # ML model training & data generation
-│   ├── translations.py      # i18n translations (EN/HI/TE)
-│   ├── templates/
-│   │   └── index.html       # Main HTML template
-│   └── static/
-│       ├── css/
-│       │   └── styles.css   # Application styles
-│       └── js/
-│           ├── i18n.js      # Internationalization module
-│           └── app.js       # Main application logic
-├── model/                   # Trained model artifacts (generated)
-├── tests/                   # Test suite
-├── .github/workflows/       # CI/CD pipelines
-├── k8s/                     # Kubernetes manifests
-├── requirements.txt         # Python dependencies
-├── Dockerfile               # Docker configuration
-├── .env.example             # Environment variables template
-└── README.md               # This file
-```
-
-## 📡 API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Main application page |
-| `/api/predict` | POST | Submit customer data for churn prediction |
-| `/api/dashboard` | GET | Retrieve dashboard analytics data |
-| `/api/feature-importances` | GET | Get feature importance rankings |
-| `/api/translations` | GET | Get i18n translations for a language |
-| `/api/languages` | GET | List supported languages |
-| `/health` | GET | Health check endpoint |
-
-### Prediction API Example
+### Run the Streamlit App
 
 ```bash
-curl -X POST http://localhost:5000/api/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "credit_score": 650,
-    "geography": "France",
-    "gender": "Male",
-    "age": 35,
-    "tenure": 5,
-    "balance": 50000,
-    "num_products": 2,
-    "has_cr_card": 1,
-    "is_active_member": 1,
-    "estimated_salary": 75000
-  }'
+streamlit run streamlit_app.py
 ```
 
-## 🧪 Running Tests
+Open your browser to `http://localhost:8501`
 
-```bash
-pytest tests/ --cov=app --cov-report=term
-```
+### Upload Your Own Data
 
-## 🐳 Docker Deployment
+1. Navigate to Dashboard or Customers page
+2. Click "Upload Your Own Dataset"
+3. Select a CSV with required columns:
+   - CreditScore, Geography, Gender, Age
+   - Tenure, Balance, NumOfProducts
+   - HasCrCard, IsActiveMember, EstimatedSalary
 
-```bash
-# Build the image
-docker build -t bcca .
+The app will process the data and generate predictions automatically.
 
-# Run the container
-docker run -p 5000:5000 bcca
-```
-
-## 🔧 Configuration
-
-Copy `.env.example` to `.env` and configure:
-
-```env
-SECRET_KEY=your-secret-key-here
-FLASK_DEBUG=1
-PORT=5000
-```
-
-## 📊 Model Performance
+## Model Details
 
 - **Algorithm**: Random Forest Classifier
 - **Estimators**: 200
 - **Max Depth**: 15
-- **Training Data**: 5,000 synthetic samples
-- **Features**: 10 customer attributes
+- **Min Samples Split**: 10
+- **Min Samples Leaf**: 4
+- **Class Weight**: balanced
+- **Test Size**: 20%
+- **Random State**: 42
 
-## 🌐 Language Support
+### Performance Metrics
 
-The platform supports three languages:
-- 🇺🇸 English (en)
-- 🇮🇳 Hindi (hi) - हिंदी
-- 🇮🇳 Telugu (te) - తెలుగు
+The model is evaluated on:
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- Confusion Matrix
 
-Switch languages using the dropdown in the navigation bar.
+## Running Tests
 
-## 🤝 Contributing
+```bash
+# Run pytest with coverage
+pytest tests/ --cov=app --cov-report=term --cov-report=xml
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## 🧾 Spec-Driven Development
-
-This repository uses Spec-Kit to manage feature delivery with spec artifacts.
-- `constitution.md` defines project spec rules
-- `.specify/templates/feature-spec-template.md` is the canonical template for new feature specs
-- `specs/` holds tracked feature specs such as `specs/BCCA-FEAT-001-prediction-api.md`
-
-## Spec-Driven Development (Spec-Kit)
-
-This repository includes minimal Spec-Kit support. Templates live in `.specify/templates/` and a repository constitution is in `.specify/memory/constitution.md`.
-
-To add a new feature spec, create a folder under `specs/` containing `spec.md`, `plan.md`, and `tasks.md` (templates available). Example: `specs/BCCA-FEAT-002-batch-prediction/`.
-
-To initialize the Spec-Kit tooling you can run:
-
-```powershell
-npx @github/spec-kit init
+# Current coverage: ~39%
 ```
 
-## 📄 License
+## Code Quality
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Linting and Formatting
 
-## 🙏 Acknowledgments
+```bash
+# Check code with Ruff
+ruff check app/ tests/
 
-- Built with [Flask](https://flask.palletsprojects.com/)
-- Machine Learning with [scikit-learn](https://scikit-learn.org/)
-- Charts powered by [Chart.js](https://www.chartjs.org/)
+# Format check
+ruff format --check app/
+
+# Type check with Mypy
+mypy app/
+
+# Pylint analysis
+pylint app/ --fail-under=7.0
+
+# Flake8 style check
+flake8 app/ --max-line-length=100
+
+# Dead code detection
+vulture app/ --min-confidence 80
+```
+
+### Security Scanning
+
+```bash
+# Python security linting
+bandit -r app/ -x tests
+
+# Secret scanning
+gitleaks detect --source . --config=.gitleaks.toml
+
+# Dependency audit
+pip-audit -r requirements.txt --desc --strict
+```
+
+### Pre-commit Hooks
+
+```bash
+# Install pre-commit hooks
+pre-commit install
+
+# Run on all files
+pre-commit run --all-files
+```
+
+## Docker
+
+### Build Image
+
+```bash
+docker build -t bcca .
+```
+
+### Run Container
+
+```bash
+docker run -p 8501:8501 bcca
+```
+
+## Project Structure
+
+```
+.
+├── app/
+│   ├── __init__.py
+│   ├── model.py              # Model training and prediction
+│   └── translations.py       # i18n support (EN, HI, TE)
+├── data/
+│   └── Churn_Modelling.csv   # Training dataset
+├── deployment/               # Deployment configurations
+├── docs/                     # Documentation
+├── model/                    # Saved model artifacts
+├── specs/                    # Feature specifications
+│   └── churn-prediction/
+│       ├── spec.md
+│       ├── plan.md
+│       └── tasks.md
+├── tests/
+│   ├── __init__.py
+│   └── test_model.py         # Model tests
+├── .gitlab-ci.yml           # GitLab CI pipeline
+├── .gitleaks.toml           # Gitleaks configuration
+├── .pre-commit-config.yaml  # Pre-commit hooks
+├── cliff.toml               # git-cliff changelog config
+├── pyproject.toml           # Python project metadata and tool configs
+├── requirements.txt         # Python dependencies
+├── Dockerfile               # Container image
+├── LICENSE                  # AGPLv3 License
+├── README.md                # This file
+├── CONTRIBUTING.md          # Contribution guidelines
+├── USER_MANUAL.md           # User guide
+├── SECURITY.md              # Security policy
+├── CODE_OF_CONDUCT.md       # Community guidelines
+├── CHANGELOG.md             # Version history
+└── streamlit_app.py         # Main application
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```bash
+# Application
+APP_NAME=Bank Customer Churn Analysis
+APP_VERSION=1.0.0
+
+# Model paths
+MODEL_PATH=model/churn_model.pkl
+SCALER_PATH=model/scaler.pkl
+LABEL_GEO_PATH=model/label_geo.pkl
+LABEL_GENDER_PATH=model/label_gender.pkl
+
+# Dataset
+DATASET_PATH=data/Churn_Modelling.csv
+
+# Streamlit
+STREAMLIT_SERVER_PORT=8501
+STREAMLIT_SERVER_HEADLESS=true
+```
+
+## CI/CD Pipeline
+
+### GitLab CI Stages
+
+1. **Lint**: Code quality checks (Ruff, Pylint, Flake8, Pyupgrade, Vulture)
+2. **Format**: Code formatting verification (Ruff format)
+3. **Type Check**: Static type analysis (Mypy)
+4. **Test**: Unit tests with coverage reporting (pytest)
+5. **Security**: Security scanning (Bandit, Semgrep, Gitleaks, TruffleHog)
+6. **Build**: Docker image build
+7. **Deploy**: Release automation with changelog
+
+### GitHub Actions
+
+Configuration available in `deployment/ci.yml`.
+
+## GitLab Runner
+
+This project includes automated runner setup for CI/CD execution.
+
+### Setup Script
+
+A ready-to-use setup script is provided at:
+- `deployment/setup-gitlab-runner.sh`
+
+This script automates runner registration and startup.
+
+### Requirements
+
+- GitLab Personal Access Token with `api` scope
+- Runner can use `shell` or `docker` executor
+- Supports Linux (apt/dnf/zypper/pacman), macOS (Homebrew)
+- Windows users should run under WSL or Git Bash
+
+### Configuration
+
+Environment variables:
+- `GITLAB_PAT` - Personal Access Token with api scope
+- `GITLAB_HOST` - GitLab instance host (default: https://gitlab.com)
+- `RUNNER_EXECUTOR` - `shell` or `docker`
+- `RUNNER_DOCKER_IMAGE` - Docker image for docker executor
+- `RUNNER_TAG_LIST` - Comma-separated runner tags
+
+### Quick Start
+
+```bash
+# Set required PAT
+export GITLAB_PAT="your-pat-here"
+
+# Run setup script
+bash deployment/setup-gitlab-runner.sh
+
+# Or with explicit options
+bash deployment/setup-gitlab-runner.sh \
+  --executor docker \
+  --image docker:stable \
+  --tags "linux,x64,docker"
+```
+
+### Runner Management
+
+```bash
+# Check runner status
+gitlab-runner list
+
+# Restart runner service
+sudo systemctl restart gitlab-runner  # systemd
+brew services restart gitlab-runner  # macOS
+
+# Stop background runner
+kill $(cat ~/.gitlab-runner/runner.pid)
+
+# View logs
+tail -f ~/.gitlab-runner/runner.log
+```
+
+### Runner Configuration
+
+After registration, the runner config is saved to:
+- `~/.gitlab-runner/config.toml`
+
+To modify executor or tags, edit this file and restart the runner.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- **Documentation**: See [USER_MANUAL.md](USER_MANUAL.md)
+- **Issues**: Report bugs via GitLab issues
+- **Security**: See [SECURITY.md](SECURITY.md)
+
+## Acknowledgments
+
+Built with:
+- scikit-learn for machine learning
+- Streamlit for the web interface
+- Plotly for data visualization
+- The open-source community for amazing tools
+
+---
+
+**Version**: 1.0.0  
+**Last Updated**: June 2026

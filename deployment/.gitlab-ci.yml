@@ -1,0 +1,177 @@
+image: python:3.10
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip-cache"
+  PYTHON_VERSION: "3.10"
+
+cache:
+  paths:
+    - .pip-cache/
+    - .venv/
+
+stages:
+  - test
+  - lint
+  - format
+  - type-check
+  - security
+  - dependency-audit
+  - coverage
+  - build
+  - release
+
+before_script:
+  - python -m venv .venv
+  - export PATH="$CI_PROJECT_DIR/.venv/bin:$PATH"
+  - python -m pip install --upgrade pip
+  - python -m pip install -r requirements.txt
+
+# ============================================
+# Test Stage
+# ============================================
+test:
+  stage: test
+  script:
+    - python -m app.model
+    - pytest tests/ --tb=short -v
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.10", "3.11"]
+  artifacts:
+    paths:
+      - model/
+    expire_in: 1 hour
+
+# ============================================
+# Lint Stage
+# ============================================
+lint-ruff:
+  stage: lint
+  script:
+    - ruff check app/ tests/
+  allow_failure: false
+
+lint-pylint:
+  stage: lint
+  script:
+    - pylint app/ --fail-under=7.0
+  allow_failure: true
+
+lint-flake8:
+  stage: lint
+  script:
+    - flake8 app/ --max-line-length=100 --count
+  allow_failure: true
+
+# ============================================
+# Format Stage
+# ============================================
+format:
+  stage: format
+  script:
+    - ruff format --check app/
+
+pyupgrade:
+  stage: format
+  script:
+    - pyupgrade --py38-plus $$(find app/ -name "*.py")
+  allow_failure: true
+
+# ============================================
+# Type Check Stage
+# ============================================
+type-check:
+  stage: type-check
+  script:
+    - mypy app/ --ignore-missing-imports
+
+# ============================================
+# Security Stage
+# ============================================
+security-bandit:
+  stage: security
+  script:
+    - bandit -r app/ -x tests
+
+security-semgrep:
+  stage: security
+  script:
+    - semgrep --config=.semgrep/ app/ || true
+  allow_failure: true
+
+security-gitleaks:
+  stage: security
+  image: registry.gitlab.com/security-products/gitleaks:latest
+  script:
+    - gitleaks detect --source . --config=.gitleaks.toml --no-git
+  allow_failure: true
+  artifacts:
+    reports:
+      secret_detection: gl-secret-detection-report.json
+
+security-trufflehog:
+  stage: security
+  script:
+    - pip install trufflehog
+    - trufflehog filesystem . --no-verification --only-verified || true
+  allow_failure: true
+
+# ============================================
+# Dependency Audit Stage
+# ============================================
+dependency-audit:
+  stage: dependency-audit
+  script:
+    - pip install pip-audit
+    - pip-audit -r requirements.txt --desc --strict
+
+# ============================================
+# Coverage Stage
+# ============================================
+coverage:
+  stage: coverage
+  script:
+    - python -m app.model
+    - pytest tests/ --cov=app --cov-report=term --cov-report=xml --cov-report=html --cov-fail-under=80
+  coverage: '/TOTAL.+?(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - htmlcov/
+    expire_in: 30 days
+
+# ============================================
+# Build Stage
+# ============================================
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+  services:
+    - docker:dind
+  only:
+    - main
+    - tags
+
+# ============================================
+# Release Stage
+# ============================================
+release:
+  stage: release
+  script:
+    - echo "Creating release for tag $CI_COMMIT_TAG..."
+    - pip install git-cliff
+    - git-cliff --unreleased --tag $CI_COMMIT_TAG --output CHANGELOG.md
+    - echo "Release $CI_COMMIT_TAG ready"
+  artifacts:
+    paths:
+      - CHANGELOG.md
+    expire_in: 30 days
+  only:
+    - tags
+  except:
+    - branches

@@ -1,0 +1,21 @@
+[core]
+telemetryOptOut = true
+
+[client]
+showErrorDetails = true
+
+[logger]
+level = "debug"
+
+[server]
+port = 8501
+headless = true
+runOnSave = true
+maxUploadSize = 200
+
+[theme]
+primaryColor = "#0077b6"
+backgroundColor = "#12121a"
+secondaryBackgroundColor = "#1a1a2e"
+textColor = "#f1f5f9"
+font = "sans serif"

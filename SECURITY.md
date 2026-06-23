@@ -8,28 +8,42 @@
 
 ## Reporting a Vulnerability
 
-We take the security of our project seriously. If you believe you've found a security vulnerability, please report it to us as described below.
+We take the security of Bank Customer Churn Analysis seriously. If you have discovered a security vulnerability, please follow these steps:
 
-**Please do not report security vulnerabilities through public GitHub issues.**
+1. **Do not** open a public GitHub issue for security vulnerabilities.
+2. Send an email to [bcca-security@example.com](mailto:bcca-security@example.com) with:
+   - A description of the vulnerability
+   - Steps to reproduce the issue
+   - Potential impact assessment
+   - Suggested fixes (if any)
 
-### Reporting Process
+3. We will acknowledge your email within 3 business days.
+4. We will provide a detailed response within 7 business days outlining our plan to address the issue.
+5. We will keep you informed of the progress and credit you for the discovery (unless you prefer anonymity).
 
-1. **Email**: Send details to [security@example.com](mailto:security@example.com)
-2. **Response Time**: You can expect to hear back within 48 hours
-3. **Updates**: We will keep you informed of the progress towards a fix
+## Security Best Practices
 
-### What to Include
+When contributing to this project:
 
-- Type of vulnerability
-- Full paths of affected source files
-- Steps to reproduce
-- Proof-of-concept code (if possible)
-- Impact of the vulnerability
+- Never commit secrets, API keys, or credentials to the repository
+- Use environment variables for sensitive configuration
+- Report security issues in private, not in public forums
+- Keep dependencies up to date
+- Follow secure coding practices
 
-## Security Measures
+## Automated Security Checks
 
-- Environment variables for sensitive configuration
-- Input validation on all API endpoints
-- CORS headers configured for production
-- No hardcoded secrets in source code
-- Regular dependency audits
+This repository includes automated security scanning:
+- Bandit for Python security linting
+- Semgrep for static analysis
+- Gitleaks for secret scanning
+- TruffleHog for comprehensive secret detection
+- pip-audit for dependency vulnerability scanning
+
+## Disclosure Policy
+
+- We request 90 days to address reported vulnerabilities before public disclosure
+- Coordinated disclosure is preferred
+- We appreciate responsible security researchers
+
+Thank you for helping keep this project and our users safe!

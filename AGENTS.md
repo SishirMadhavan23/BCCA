@@ -1,85 +1,76 @@
-# Agents.md - AI/LLM Agent Guide for Bank Customer Churn Analysis
+# AGENTS.md
 
-## Project Overview
+## Overview
 
-This project is a Bank Customer Churn Analysis platform built with Flask (Python backend), scikit-learn (ML), and Chart.js (frontend visualizations). It supports English, Hindi, and Telugu.
+This document describes the coding agents and automated tools used in this repository.
 
-## Architecture
+## Automated Agents
 
-### Backend (Flask)
-- **app/app.py**: Flask app with REST API endpoints for prediction, dashboard, translations
-- **app/model.py**: Random Forest classifier trained on synthetic bank customer data
-- **app/translations.py**: i18n dictionary with English, Hindi, Telugu translations
+### CI/CD Pipeline
+- GitHub Actions workflow (`.github/workflows/ci.yml`)
+- Runs on: push to main/develop, pull requests, version tags
+- Jobs:
+  - Test (Python 3.10, 3.11)
+  - Lint (Ruff, Pylint, Flake8, Pyupgrade, Vulture)
+  - Format check (Ruff, Pyupgrade)
+  - Type check (Mypy)
+  - Security scan (Bandit, Semgrep, Gitleaks, TruffleHog)
+  - Dependency audit (pip-audit)
+  - Coverage report
+  - Changelog generation (git-cliff)
+  - Release automation
 
-### Frontend (HTML/CSS/JS)
-- **Single-page application** with hash-based navigation (home, predict, dashboard, about)
-- **Chart.js** for visualizations (doughnut, bar, line, horizontal bar charts)
-- **Client-side i18n** with language persistence via localStorage and URL params
+### Pre-commit Hooks
+- Configured in `.pre-commit-config.yaml`
+- Includes: Ruff, Black, isort, mypy, bandit, trailing whitespace, end-of-file fixes
 
-## Key Technical Decisions
+### Code Quality Agents
+- **Ruff**: Fast Python linter and formatter
+- **Mypy**: Static type checker
+- **Pylint**: Code analysis and quality checker
+- **Flake8**: Style guide enforcement
+- **Bandit**: Security linting
+- **Semgrep**: Static analysis for security and code patterns
+- **Vulture**: Dead code detection
 
-1. **Synthetic Data Generation**: Model trains on generated data for demo purposes
-   - 10 features: CreditScore, Geography, Gender, Age, Tenure, Balance, NumOfProducts, HasCrCard, IsActiveMember, EstimatedSalary
-   - Churn simulated using weighted feature combinations with random noise
+### Dependency Management
+- **pip-audit**: Vulnerability scanning for Python dependencies
+- **pip-upgrader**: Automated dependency updates
+- **pipdeptree**: Dependency tree visualization
 
-2. **Multi-language Architecture**: Server-side translations stored in Python dict, served via `/api/translations` endpoint, applied client-side via `data-i18n` attributes
+## Local Development
 
-3. **Model Serialization**: joblib for model, scaler, and label encoders
-
-## API Contract
-
-### POST /api/predict
-```json
-{
-  "credit_score": int,
-  "geography": "France|Spain|Germany",
-  "gender": "Male|Female",
-  "age": int,
-  "tenure": int,
-  "balance": float,
-  "num_products": int,
-  "has_cr_card": 0|1,
-  "is_active_member": 0|1,
-  "estimated_salary": float
-}
-```
-Response:
-```json
-{
-  "success": true,
-  "prediction": 0|1,
-  "probability": float,
-  "confidence": float,
-  "risk_level": "high|low"
-}
-```
-
-## Code Conventions
-
-- Python: Type hints, Google-style docstrings, PEP 8 via Ruff
-- JS: ES6+ with async/await, Chart.js v4
-- CSS: Custom properties for theming, dark mode default, responsive breakpoints at 992px/768px/480px
-
-## Testing Approach
-
-- pytest for Python backend tests
-- Test model training, prediction API, dashboard data generation
-- Mock model loading for API tests
-
-## Common Tasks
-
-### Adding a New Language
-1. Add translation dictionary in `app/translations.py`
-2. Add option in HTML language selector (`index.html`)
-3. Add to `get_supported_languages()` return
-
-### Retraining the Model
 ```bash
-python -m app.model
-```
-This regenerates the model artifacts in the `model/` directory.
+# Install pre-commit hooks
+pre-commit install
 
-### Docker Deployment
-```bash
-docker build -t bcca .
-docker run -p 5000:5000 bcca
+# Run all quality checks
+ruff check app/ tests/
+ruff format --check app/
+mypy app/
+pylint app/ --fail-under=7.0
+flake8 app/ --max-line-length=100
+bandit -r app/ -x tests
+vulture app/ --min-confidence 80
+```
+
+## Branch Protection
+
+- `main` branch requires:
+  - All CI checks passing
+  - At least 1 review approval
+  - No merge conflicts
+
+- `develop` branch:
+  - All CI checks passing
+
+## Issue Templates
+
+- Bug reports
+- Feature requests
+- Documentation improvements
+- Security vulnerabilities
+
+## Security Policy
+
+See [SECURITY.md](SECURITY.md) for responsible disclosure process.

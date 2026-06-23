@@ -1,74 +1,145 @@
-# Gitleaks configuration for BCCA (Bank Customer Churn Analysis)
+title = "gitleaks config"
 
-title = "BCCA Secret Scanning Configuration"
+[extend]
+useDefault = true
 
 [allowlist]
-description = "Allowlisted files and paths"
+description = "Allowlisted paths"
 paths = [
-    ".git",
-    "node_modules",
-    "venv",
-    ".venv",
-    "__pycache__",
-    "*.egg-info",
-    ".pytest_cache",
-    "htmlcov",
-    ".mypy_cache",
-    ".ruff_cache",
-    ".vscode",
-    ".idea",
+    '''node_modules/''',
+    '''\.git/''',
+    '''\.venv/''',
+    '''venv/''',
+    '''__pycache__/''',
+    '''\.pytest_cache/''',
+    '''\.ruff_cache/''',
+    '''\.mypy_cache/''',
+    '''htmlcov/''',
+    '''dist/''',
+    '''build/''',
 ]
 
 [[rules]]
-id = "bcca-hardcoded-password"
-description = "Hardcoded password"
-regex = '''(?i)(?:password|pwd|passwd|secret|token|api_key|apikey)(?:[\s]*=[\s]*['"][^'"]{3,}['"])'''
-tags = ["bcca", "credentials"]
+id = "hardcoded-password"
+description = "Check for hardcoded passwords"
+regex = '''(?i)(password|passwd|pwd)\s*[:=]\s*['"][^'"]{8,}['"]'''
 
 [[rules]]
 id = "generic-api-key"
 description = "Generic API Key"
-regex = '''(?i)(?:api[_-]?key|apikey|api[._-]?secret|api_secret)(?:[\s]*=[\s]*['"][^'"]{8,}['"])'''
-tags = ["bcca", "api", "credentials"]
+regex = '''(?i)api[_-]?key\s*[:=]\s*['"][^'"]{10,}['"]'''
 
 [[rules]]
-id = "private-key"
-description = "Private Key"
-regex = '''-----BEGIN\s?(?:RSA|DSA|EC|OPENSSH|PGP)?\s?PRIVATE\s?KEY-----'''
-tags = ["bcca", "crypto", "credentials"]
+id = "generic-secret"
+description = "Generic Secret"
+regex = '''(?i)secret\s*[:=]\s*['"][^'"]{10,}['"]'''
 
 [[rules]]
-id = "jwt-token"
-description = "JWT Token"
-regex = '''eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}'''
-tags = ["bcca", "jwt", "credentials"]
+id = "aws-access-key"
+description = "AWS Access Key"
+regex = '''(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'''
 
 [[rules]]
-id = "flask-secret-key"
-description = "Flask Secret Key"
-regex = '''SECRET_KEY\s*=\s*['"][a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:',.<>?/`~]{16,}['"]'''
-tags = ["bcca", "flask", "credentials"]
+id = "aws-secret-key"
+description = "AWS Secret Key"
+regex = '''(?i)aws(.{0,20})?['\"][0-9a-zA-Z\/+]{40}['\"]'''
 
 [[rules]]
 id = "github-token"
 description = "GitHub Token"
-regex = '''(?:gh[ps]_[a-zA-Z0-9]{36,}|github_pat_[a-zA-Z0-9]{22,})'''
-tags = ["bcca", "github", "credentials"]
+regex = '''(ghp|gho|ghu|ghs|ghr|github_pat)_[A-Za-z0-9_]{36,251}'''
 
 [[rules]]
-id = "generic-aws-key"
-description = "AWS Access Key ID"
-regex = '''(?:AKIA[0-9A-Z]{16}|A3T[A-Z0-9]|A3TX[A-Z0-9]|A3TF[A-Z0-9])'''
-tags = ["bcca", "aws", "credentials"]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN[ A-Z]*PRIVATE KEY[ A-Z]*-----'''
 
 [[rules]]
-id = "generic-sqli"
-description = "Potential SQL Injection via string formatting"
-regex = '''(?i)(?:SELECT|INSERT|UPDATE|DELETE).*(?:%s|%r|\+.*request|f['\"].*\{.*request)'''
-tags = ["bcca", "security", "injection"]
+id = "slack-webhook"
+description = "Slack Webhook URL"
+regex = '''https://hooks\.slack\.com/services/T[a-zA-Z0-9_]{8}/B[a-zA-Z0-9_]{8}/[a-zA-Z0-9_]{24}'''
 
 [[rules]]
-id = "debug-mode"
-description = "Flask debug mode enabled in production"
-regex = '''(?:debug\s*=\s*True|DEBUG\s*=\s*True|debug=True)'''
-tags = ["bcca", "flask", "security"]
+id = "slack-token"
+description = "Slack Token"
+regex = '''xox[baprs]-([0-9a-zA-Z-]{10,48})'''
+
+[[rules]]
+id = "generic-credential"
+description = "Generic Credential"
+regex = '''(?i)(credential|credentials)\s*[:=]\s*['"][^'"]{10,}['"]'''
+
+[[rules]]
+id = "private-key-openssh"
+description = "OpenSSH Private Key"
+regex = '''-----BEGIN OPENSSH PRIVATE KEY-----'''
+
+[[rules]]
+id = "private-key-rsa"
+description = "RSA Private Key"
+regex = '''-----BEGIN RSA PRIVATE KEY-----'''
+
+[[rules]]
+id = "private-key-pgp"
+description = "PGP Private Key"
+regex = '''-----BEGIN PGP PRIVATE KEY BLOCK-----'''
+
+[[rules]]
+id = "private-key-ec"
+description = "EC Private Key"
+regex = '''-----BEGIN EC PRIVATE KEY-----'''
+
+[[rules]]
+id = "google-api-key"
+description = "Google API Key"
+regex = '''AIza[0-9A-Za-z-_]{35}'''
+
+[[rules]]
+id = "google-cloud-oauth"
+description = "Google Cloud OAuth"
+regex = '''[0-9]+-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com'''
+
+[[rules]]
+id = "google-oauth-access-token"
+description = "Google OAuth Access Token"
+regex = '''ya29\.[0-9A-Za-z\-_]+'''
+
+[[rules]]
+id = "google-oauth-id-token"
+description = "Google OAuth ID Token"
+regex = '''eyJhbGciOiJSUzI1NiIsImtpZCI6'''
+
+[[rules]]
+id = "heroku-api-key"
+description = "Heroku API Key"
+regex = '''(?i)heroku.*[0-9A-F]{25,200}'''
+
+[[rules]]
+id = "mailchimp-api-key"
+description = "Mailchimp API Key"
+regex = '''[0-9a-f]{32}-us[0-9]{1,2}'''
+
+[[rules]]
+id = "mailgun-api-key"
+description = "Mailgun API Key"
+regex = '''key-[0-9a-zA-Z]{32}'''
+
+[[rules]]
+id = "paypal-braintree-access-token"
+description = "PayPal Braintree Access Token"
+regex = '''access_token\$production\$[0-9a-z]{16}\$[0-9a-f]{32}'''
+
+[[rules]]
+id = "stripe-api-key"
+description = "Stripe API Key"
+regex = '''(sk|pk)_live_[0-9a-zA-Z]{24,}'''
+
+[[rules]]
+id = "twilio-api-key"
+description = "Twilio API Key"
+regex = '''SK[0-9a-fA-F]{32}'''
+
+[[rules]]
+id = "twilio-account-sid"
+description = "Twilio Account SID"
+regex = '''AC[a-zA-Z0-9_\-]{32}'''

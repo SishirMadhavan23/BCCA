@@ -1,19 +1,69 @@
-.venv/
-venv/
-env/
-__pycache__/
-*.pyc
-.git/
+# Git
+.git
 .gitignore
-.vscode/
-.idea/
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
 .env
-*.env.local
+.venv
+*.sqlite3
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
+tests/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
-README.md
-tests/
-.github/
-k8s/
-.specify/
+
+# Documentation
+*.md
+LICENSE
+CHANGELOG.md
+USER_MANUAL.md
+CONTRIBUTING.md
+SECURITY.md
+CODE_OF_CONDUCT.md
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.gitlab-runner
+.gitleaks.toml
+.semgrep
+.pre-commit-config.yaml
+.cliff.toml
+
+# Specs
 specs/
+.specify/
+
+# Deployment
+Procfile
+runtime.txt
+vercel.json
+setup-gitlab-runner.sh
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Data (optional - uncomment if data is large)
+# data/
+
+# Streamlit config
+.streamlit/

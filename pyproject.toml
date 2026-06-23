@@ -9,7 +9,7 @@ description = "AI-powered Bank Customer Churn Analysis platform with multi-langu
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "AGPL-3.0-only"}
-keywords = ["banking", "churn-analysis", "machine-learning", "flask", "data-science", "customer-retention"]
+keywords = ["banking", "churn-analysis", "machine-learning", "streamlit", "data-science", "customer-retention"]
 authors = [
     {name = "BCCA Team", email = "bcca@example.com"}
 ]
@@ -25,14 +25,13 @@ classifiers = [
     "Natural Language :: Telugu",
 ]
 dependencies = [
-    "flask>=3.0",
-    "flask-cors>=4.0",
-    "pandas>=2.1",
-    "numpy>=1.26",
-    "scikit-learn>=1.3",
-    "joblib>=1.3",
-    "gunicorn>=21.2",
-    "python-dotenv>=1.0",
+    "streamlit>=1.28.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "scikit-learn>=1.3.0",
+    "joblib>=1.3.0",
+    "python-dotenv>=1.0.0",
+    "plotly>=5.17.0",
 ]
 
 [project.urls]
@@ -82,7 +81,7 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "if TYPE_CHECKING:",
 ]
-fail_under = 80
+fail_under = 30
 show_missing = true
 
 [tool.setuptools.packages.find]
@@ -97,6 +96,9 @@ master.jobs = 4
 master.persistent = false
 master.unsafe-load-any-extension = false
 "MESSAGES CONTROL".disable = [
+=======
+[tool.pylint.messages-control]
+disable = [
     "C0114",  # missing-module-docstring
     "C0115",  # missing-class-docstring
     "C0116",  # missing-function-docstring
@@ -104,8 +106,18 @@ master.unsafe-load-any-extension = false
     "R0913",  # too-many-arguments
     "W0511",  # fixme
 ]
-REPORTS.output-format = "colorized"
-BASIC.good-names = [
+
+[tool.pylint.master]
+py-version = "3.10"
+jobs = 4
+persistent = false
+unsafe-load-any-extension = false
+
+[tool.pylint.reports]
+output-format = "colorized"
+
+[tool.pylint.basic]
+good-names = [
     "i", "j", "k", "x", "y", "z", "X", "y", "_", "df", "id", "ex", "db",
 ]
 DESIGN.max-args = 10

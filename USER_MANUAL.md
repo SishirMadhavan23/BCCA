@@ -1,125 +1,115 @@
-# Bank Customer Churn Analysis - User Manual
+# User Manual - Bank Customer Churn Analysis
 
 ## Getting Started
 
-Welcome to the Bank Customer Churn Analysis platform! This guide will help you navigate and use all features of the application.
+### Launching the Application
 
-## 📋 Table of Contents
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1. [Accessing the Application](#accessing-the-application)
-2. [Language Selection](#language-selection)
-3. [Making Predictions](#making-predictions)
-4. [Understanding Results](#understanding-results)
-5. [Dashboard Overview](#dashboard-overview)
-6. [Charts and Analytics](#charts-and-analytics)
-7. [About Section](#about-section)
+2. Train the model (first run only):
+   ```bash
+   python -m app.model
+   ```
 
-## Accessing the Application
+3. Start the Streamlit app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
 
-1. Ensure the application is running (see [README.md](README.md) for installation)
-2. Open your web browser and navigate to `http://localhost:5000`
-3. The home page will display with an overview of the platform
+4. Open your browser to `http://localhost:8501`
 
-## Language Selection
+## Using the Application
 
-The platform supports three languages:
+### Home Page
 
-1. **English** (English)
-2. **Hindi** (हिंदी)
-3. **Telugu** (తెలుగు)
+- Overview of the platform and its key features
+- Quick access to all sections via the sidebar
 
-To switch languages:
-- Click the language dropdown in the top-right navigation bar
-- Select your preferred language
-- The entire interface will update immediately
+### Dashboard
 
-Your language preference is saved and will be remembered on your next visit.
+- View key metrics: total customers, churned, retained, churn rate
+- Upload your own CSV dataset for analysis
+- Explore interactive charts:
+  - Churn distribution pie chart
+  - Geographic distribution bar chart
+  - Age distribution analysis
+  - Credit card distribution
+  - Feature importance analysis
 
-## Making Predictions
+### Predict
 
-1. Navigate to the **Predict** section using the navigation bar
-2. Fill in the customer details form:
+- Enter customer details manually
+- Get real-time churn prediction with probability
+- View risk factors and confidence level
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| Credit Score | Customer's credit score (300-900) | 650 |
-| Geography | Country of residence | France, Spain, Germany |
-| Gender | Customer's gender | Male, Female |
-| Age | Customer's age (18-100) | 35 |
-| Tenure | Years with the bank (0-10) | 5 |
-| Balance | Account balance in USD | 50000 |
-| Number of Products | Banking products used | 1-4 |
-| Has Credit Card | Whether customer has credit card | Yes/No |
-| Is Active Member | Whether customer is active | Yes/No |
-| Estimated Salary | Customer's estimated annual salary | 75000 |
+### Customers
 
-3. Click **Predict Churn** to get the prediction
-4. View the results on the right panel
+- Browse the complete customer directory
+- Search by customer name
+- Filter by geography and status
+- Upload custom datasets
+- View detailed customer information
 
-## Understanding Results
+### About
 
-The prediction result shows:
+- Learn about the application
+- View model details (Random Forest, 200 estimators, max depth 15)
+- See team information
 
-- **Churn Probability Gauge**: Visual indicator of churn risk (0-100%)
-- **Risk Badge**: "High Risk" (red) or "Low Risk" (green)
-- **Confidence Score**: Model's confidence in the prediction
-- **Risk Message**: Clear explanation of the prediction
+## Language Support
 
-### Risk Levels
+Change the application language using the sidebar:
+- English
+- Hindi (हिंदी)
+- Telugu (తెలుగు)
 
-- **High Risk (>50%)**: Customer is likely to churn. Consider retention actions.
-- **Low Risk (<50%)**: Customer is likely to stay with the bank.
+## Uploading Your Own Dataset
 
-Click **Predict Again** to make another prediction.
+1. Go to Dashboard or Customers page
+2. Click "Upload Your Own Dataset"
+3. Select a CSV file with required columns:
+   - CreditScore
+   - Geography
+   - Gender
+   - Age
+   - Tenure
+   - Balance
+   - NumOfProducts
+   - HasCrCard
+   - IsActiveMember
+   - EstimatedSalary
 
-## Dashboard Overview
+4. The app will process the data and run predictions automatically
 
-The Dashboard section provides comprehensive analytics:
+## Model Information
 
-### KPI Cards
-- **Total Customers**: Total number of customers in the dataset
-- **Churned**: Number of customers who have left
-- **Retained**: Number of customers who stayed
-- **Churn Rate**: Percentage of customers who churned
-- **Active Members**: Number of active customers
-- **Avg Age**: Average customer age
-
-### Charts and Analytics
-
-1. **Churn Distribution** (Doughnut Chart)
-   - Visual representation of churned vs retained customers
-
-2. **Geographic Distribution** (Bar Chart)
-   - Customer distribution by country
-   - See churn rates across different regions
-
-3. **Age Distribution** (Line Chart)
-   - Churn rate across different age groups
-   - Identify which age segments have higher churn
-
-4. **Feature Importance** (Horizontal Bar Chart)
-   - Shows which factors most influence churn predictions
-   - Higher percentages = more influential factors
-
-## About Section
-
-The About section provides:
-- Platform overview and purpose
-- Key features list
-- Model technical details (algorithm, parameters)
-- Team credit
+- Algorithm: Random Forest
+- Estimators: 200
+- Max Depth: 15
+- Training Data: Churn_Modelling.csv or synthetic data
 
 ## Troubleshooting
 
-**Q: The prediction isn't working.**
-A: Ensure the model is trained by running `python -m app.model` first.
+### Model Not Loading
 
-**Q: Can't see any charts.**
-A: Check your internet connection - Chart.js is loaded from CDN.
+If you see "Model could not be loaded":
+1. Ensure you have run `python -m app.model` at least once
+2. Check that the `model/` directory contains:
+   - churn_model.pkl
+   - scaler.pkl
+   - label_geo.pkl
+   - label_gender.pkl
 
-**Q: Language isn't switching.**
-A: Try refreshing the page after switching languages.
+### Dataset Upload Fails
 
-## Support
+- Verify your CSV has all required columns
+- Ensure data types are correct (numeric fields should be numbers)
+- Check file encoding (use UTF-8)
 
-For additional help, please open an issue on the GitHub repository or contact the development team.
+### Performance Issues
+
+- For large datasets (>10,000 rows), processing may take time
+- Consider using the provided dataset for best performance

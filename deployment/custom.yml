@@ -1,0 +1,117 @@
+rules:
+  - id: flask-debug-enabled
+    pattern-either:
+      - pattern: app.run(debug=True)
+      - pattern: |
+          app.debug = True
+      - pattern: |
+          config["DEBUG"] = True
+    message: "Flask debug mode should not be enabled in production"
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      technology: flask
+      confidence: HIGH
+
+  - id: hardcoded-secret-key
+    pattern: |
+      app.config["SECRET_KEY"] = "..."
+    message: "Hardcoded Flask secret key detected. Use environment variables instead."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      category: security
+      technology: flask
+      confidence: HIGH
+
+  - id: dangerous-eval
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+    message: "Use of eval/exec detected. This can lead to code injection."
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: sql-injection
+    pattern-either:
+      - pattern: |
+          f"...{...}..."
+      - pattern: |
+          "...".format(...)
+      - pattern: |
+          "..." % (...)
+    patterns:
+      - pattern-inside: |
+          ...execute(...)
+    message: "Potential SQL injection via string formatting in execute()"
+    languages: [python]
+    severity: ERROR
+    metadata:
+      category: security
+      technology: database
+      confidence: MEDIUM
+
+  - id: pickle-deserialization
+    pattern: |
+      pickle.load(...)
+    message: "Deserializing untrusted data with pickle can lead to arbitrary code execution"
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: subprocess-shell-true
+    pattern: |
+      subprocess.run(..., shell=True)
+    message: "Avoid shell=True in subprocess calls to prevent shell injection"
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: insecure-http-connection
+    pattern-either:
+      - pattern: |
+          requests.get("http://...", ...)
+      - pattern: |
+          requests.post("http://...", ...)
+      - pattern: |
+          urlopen("http://...")
+    message: "Using unencrypted HTTP connection. Consider using HTTPS instead."
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      technology: network
+      confidence: MEDIUM
+
+  - id: assert-used
+    pattern: |
+      assert ...
+    message: "assert statements are stripped in optimized Python. Use proper validation."
+    languages: [python]
+    severity: INFO
+    metadata:
+      category: reliability
+      technology: python
+      confidence: HIGH
+
+  - id: print-statement
+    pattern: |
+      print(...)
+    message: "print() statement found in production code. Use logging instead."
+    languages: [python]
+    severity: INFO
+    metadata:
+      category: best-practice
+      technology: python
+      confidence: HIGH

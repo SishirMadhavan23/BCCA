@@ -1,71 +1,56 @@
-# git-cliff configuration for BCCA (Bank Customer Churn Analysis)
-
 [changelog]
-# Template for the changelog header
 header = """
 # Changelog
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 """
-# Template for the version header
-version = """
-## [{{ version }}] - {{ timestamp | date(format="%Y-%m-%d") }}
-
-"""
-# Template for commit message grouping
-commit = """
-{% for group, commits in commits | group_by(attribute="group") %}
-### {{ group | upper_first }}
-{% for commit in commits %}
-- {{ commit.message | upper_first }}{% end %}
-{% endfor %}
-
-"""
-# Template for the whole changelog body
 body = """
 {% if version %}\
-{{ version_header }}\
+    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## [Unreleased]
 {% endif %}\
+{% if previous %}\
+    {% if previous.release %}
+        [{{ previous.version | trim_start_matches(pat="v") }}]: <compare-url>
+    {% endif %}
+{% endif %}
 {% for group, commits in commits | group_by(attribute="group") %}
-### {{ group | upper_first }}
-{% for commit in commits %}
-- {{ commit.message | upper_first }}{% if commit.breaking %} [breaking]{% endif %}{% if commit.scope %} ({{ commit.scope }}){% endif %}
+    ### {{ group | upper_first }}
+    {% for commit in commits %}
+        - {{ commit.message | upper_first | split(pat="\n") | first }}\
+    {% endfor %}
 {% endfor %}
-{% endfor %}\
 """
-
+trim = true
+body_include_commits = true
+commit_preprocessors = ["cliff-jira-preprocessor"]
+postprocessors = ["cliff-postprocessor"]
 [git]
-# Parse conventional commits
 conventional_commits = true
-# Filter commits by specified types
 filter_unconventional = true
-# Generate commit URLs
-remote = "gitlab"
-# Repository URL
-repository = "https://code.swecha.org/SishirMadhavan23/BCCA"
-# Tag pattern for versions
-tag_pattern = "v[0-9]*"
-# Skip merge commits
-skip_merges = true
-
-# Commit pre-processing
-[git.commit_preprocessors]
-# Replace issue numbers with links
-replace_regex = [
-  {pattern = "(#[0-9]+)", replace = "[`$1`](https://code.swecha.org/SishirMadhavan23/BCCA/-/issues/$1)"},
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Features" },
+    { message = "^fix", group = "Bug Fixes" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Refactoring" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^docs", group = "Documentation" },
+    { message = "^chore", group = "Miscellaneous" },
 ]
-
-# Commit parsers based on conventional commits
-[git.conventional_commits.parsers]
-feat = { group = "Features", description = "New features" }
-fix = { group = "Bug Fixes", description = "Bug fixes" }
-docs = { group = "Documentation", description = "Documentation changes" }
-style = { group = "Styling", description = "Code style changes" }
-refactor = { group = "Refactoring", description = "Code refactoring" }
-perf = { group = "Performance", description = "Performance improvements" }
-test = { group = "Testing", description = "Test additions/updates" }
-build = { group = "Build System", description = "Build system changes" }
-ci = { group = "CI/CD", description = "CI/CD configuration changes" }
-chore = { group = "Chores", description = "Other changes" }
-revert = { group = "Reverts", description = "Reverted commits" }
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9]*"
+[gitconventional_commits]
+lax = false
+[github]
+owner = "yourusername"
+repo = "bank-customer-churn-analysis"
+[mode]
+remote = "origin"
+"

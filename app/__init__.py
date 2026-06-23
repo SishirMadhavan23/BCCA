@@ -1,1 +1,1 @@
-"""Bank Customer Churn Analysis - Flask Application Package."""
+"""Bank Customer Churn Analysis application package."""

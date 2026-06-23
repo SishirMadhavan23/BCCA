@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\acer\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+  "python.linting.enabled": true,
+  "python.linting.ruffEnabled": true,
+  "ruff.path": "C:\\Users\\acer\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\ruff.exe",
+  "python.analysis.extraPaths": ["./app"]
+}
