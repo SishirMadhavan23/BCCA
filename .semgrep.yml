@@ -1,0 +1,18 @@
+rules:
+  - id: python-best-practices
+    languages:
+      - python
+    message: "Best practice violation"
+    severity: WARNING
+
+  - id: python-security
+    languages:
+      - python
+    message: "Potential security issue"
+    severity: ERROR
+
+  - id: python-imports
+    languages:
+      - python
+    message: "Import issue"
+    severity: WARNING

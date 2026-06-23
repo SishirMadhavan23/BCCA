@@ -1,0 +1,72 @@
+stages:
+  - lint
+  - test
+  - security
+  - build
+  - deploy
+
+variables:
+  PYTHON_VERSION: "3.11"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - .venv/
+
+default:
+  image: python:3.11-slim
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends curl build-essential
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+
+# Lint Stage
+lint:
+  stage: lint
+  script:
+    - ruff check app/ tests/
+    - ruff format --check app/
+    - pylint app/ --fail-under=7.0 || true
+    - flake8 app/ --max-line-length=100 --count
+    - pyupgrade --py38-plus $(find app/ -name "*.py") || true
+    - vulture app/ --min-confidence 80 || true
+  allow_failure: true
+
+# Test Stage
+test:
+  stage: test
+  script:
+    - python -m app.model
+    - pytest tests/ --cov=app --cov-report=term --cov-report=xml --cov-fail-under=80
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage.xml
+  allow_failure: false
+
+# Security Stage
+security:
+  stage: security
+  script:
+    - bandit -r app/ -x tests
+    - pip install semgrep
+    - semgrep --config=auto app/ --metrics=off || true
+  allow_failure: true
+
+secret_scanning:
+  stage: security
+  image: zricethezav/gitleaks:latest
+  script:
+    - gitleaks detect --source . --report-path gitleaks-report.json --report-format json || true
+  allow_failure: true
+
+dependency_audit:
+  stage: security
+  script:
+    - pip install pip-audit
+    - pip-audit -r requirements.txt --desc --strict
+  allow_failure: true
