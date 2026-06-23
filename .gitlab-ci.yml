@@ -72,3 +72,17 @@ dependency_audit:
     - pip install pip-audit
     - pip-audit -r requirements.txt --desc --strict
   allow_failure: true
+
+# Build Stage
+build:
+  stage: build
+  script:
+    - echo "Build stage placeholder"
+  allow_failure: true
+
+# Deploy Stage
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploy stage placeholder"
+  allow_failure: true
