@@ -96,7 +96,7 @@ master.py-version = "3.10"
 master.jobs = 4
 master.persistent = false
 master.unsafe-load-any-extension = false
-MESSAGES CONTROL.disable = [
+"MESSAGES CONTROL".disable = [
     "C0114",  # missing-module-docstring
     "C0115",  # missing-class-docstring
     "C0116",  # missing-function-docstring

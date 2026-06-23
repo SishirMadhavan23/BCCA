@@ -1,4 +1,6 @@
 # Core Dependencies
+
+
 flask==3.0.0
 flask-cors==4.0.0
 pandas==2.1.4
@@ -25,7 +27,8 @@ semgrep==1.65.0
 trufflehog==2.2.1
 
 # Secret Scanning
-gitleaks==8.18.2
+# Gitleaks scanning is handled by the GitHub action, not via pip installation.
+# gitleaks==8.18.2
 
 # Dependency Audit
 pip-audit==2.7.0
