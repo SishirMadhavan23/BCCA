@@ -90,6 +90,13 @@ where = ["app"]
 # ============================================
 # Pylint Configuration
 # ============================================
+[tool.pylint]
+master.py-version = "3.10"
+master.jobs = 4
+master.persistent = false
+master.unsafe-load-any-extension = false
+"MESSAGES CONTROL".disable = [
+=======
 [tool.pylint.messages-control]
 disable = [
     "C0114",  # missing-module-docstring
