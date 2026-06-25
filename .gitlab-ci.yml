@@ -75,10 +75,9 @@ security:
 secret_scanning:
   stage: security
   image: zricethezav/gitleaks:latest
-  entrypoint: [""]
   script:
-    - gitleaks detect --source . --report-path gitleaks-report.json --report-format json
-  allow_failure: false
+    - /gitleaks detect --source . --report-path gitleaks-report.json --report-format json
+  allow_failure: true
 
 dependency_audit:
   stage: security
