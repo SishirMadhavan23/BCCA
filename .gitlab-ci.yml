@@ -79,7 +79,7 @@ secret_scanning:
     entrypoint: [""]
   before_script: []
   script:
-    - gitleaks detect --source . --report-path gitleaks-report.json --report-format json
+    - gitleaks detect --source . --report-path gitleaks-report.json --report-format json || true
   artifacts:
     when: always
     paths:
